@@ -28,7 +28,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- =======================================================================
 
 -- 1. Table des états de fiche
---    (référencée par fiches_frais → doit exister en premier)
+--    (référencée par fiches_frais à doit exister en premier)
 CREATE TABLE etats_fiche (
     id      INT         AUTO_INCREMENT PRIMARY KEY,
     libelle VARCHAR(50) NOT NULL
@@ -116,7 +116,7 @@ CREATE TABLE lignes_frais_hors_forfait (
 -- Données initiales
 -- =======================================================================
 
--- États de fiche
+-- états de fiche
 -- IMPORTANT : l'ordre des INSERT fixe les id (utilisés dans le code PHP)
 --   1 = Saisie en cours   (fiche créée, modifiable par le visiteur)
 --   2 = Clôturée          (visiteur a clôturé, en attente comptable)
