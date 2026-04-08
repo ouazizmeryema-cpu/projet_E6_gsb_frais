@@ -8,9 +8,10 @@ $passwords = [
     'admin123' => 'admin',
     'visiteur123' => 'visiteur1',
     'comptable123' => 'comptable1'
+    
 ];
 
-echo "Hashés de mots de passe pour la base de données:\n\n";
+echo "Hashes de mots de passe pour la base de données:\n\n";
 
 foreach ($passwords as $password => $login) {
     $hash = password_hash($password, PASSWORD_DEFAULT);
