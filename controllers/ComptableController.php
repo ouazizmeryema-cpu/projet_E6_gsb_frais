@@ -9,108 +9,114 @@ class ComptableController {
     private $fraisForfaitModel;
     private $fraisHorsForfaitModel;
     private $userModel;
-    
+
     public function __construct() {
-        $this->ficheFraisModel = new FicheFrais();
-        $this->fraisForfaitModel = new FraisForfait();
+        checkUserType('comptable');
+        $this->ficheFraisModel       = new FicheFrais();
+        $this->fraisForfaitModel     = new FraisForfait();
         $this->fraisHorsForfaitModel = new FraisHorsForfait();
-        $this->userModel = new User();
+        $this->userModel             = new User();
     }
-    
+
     public function dashboard() {
         $fichesEnAttente = $this->ficheFraisModel->getAllFichesEnAttente();
-        $visiteurs = $this->userModel->getAllVisiteurs();
-        
+        $visiteurs       = $this->userModel->getAllVisiteurs();
+
         require_once __DIR__ . '/../views/comptable/dashboard.php';
     }
-    
+
     public function voirFiche() {
         $idVisiteur = intval($_GET['visiteur'] ?? 0);
-        $moisInput = $_GET['mois'] ?? '';
-        
-        // Convertir le format YYYY-MM en YYYYMM
+        $moisInput  = $_GET['mois'] ?? '';
+
+        // Accepte les formats YYYYMM et YYYY-MM
         if (strlen($moisInput) === 7 && strpos($moisInput, '-') !== false) {
             $mois = str_replace('-', '', $moisInput);
         } else {
             $mois = $moisInput;
         }
-        
-        if (!$idVisiteur || !$mois) {
-            header('Location: /index.php');
-            exit;
+
+        if (!$idVisiteur || !preg_match('/^\d{6}$/', $mois)) {
+            redirect('index.php?error=parametres_invalides');
         }
-        
-        $fiche = $this->ficheFraisModel->getFicheByMois($idVisiteur, $mois);
-        $lignesForfait = $this->fraisForfaitModel->getLignesByMois($idVisiteur, $mois);
+
+        $fiche            = $this->ficheFraisModel->getFicheByMois($idVisiteur, $mois);
+        $lignesForfait    = $this->fraisForfaitModel->getLignesByMois($idVisiteur, $mois);
         $fraisHorsForfait = $this->fraisHorsForfaitModel->getByMois($idVisiteur, $mois);
-        $visiteur = $this->userModel->getById($idVisiteur);
-        
+        $visiteur         = $this->userModel->getById($idVisiteur);
+
+        if (!$visiteur) {
+            redirect('index.php?error=visiteur_introuvable');
+        }
+
         require_once __DIR__ . '/../views/comptable/voir_fiche.php';
     }
-    
+
     public function validerFiche() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /index.php');
-            exit;
+            redirect('index.php');
         }
-        
-        $idVisiteur = intval($_POST['id_visiteur']);
-        $mois = $_POST['mois'];
-        
-        $this->ficheFraisModel->validerFiche($idVisiteur, $mois);
-        
-        header('Location: /index.php?success=1');
-        exit;
+
+        $idVisiteur = intval($_POST['id_visiteur'] ?? 0);
+        $mois       = $_POST['mois'] ?? '';
+
+        if ($idVisiteur && preg_match('/^\d{6}$/', $mois)) {
+            $this->ficheFraisModel->validerFiche($idVisiteur, $mois);
+        }
+
+        redirect('index.php?success=1');
     }
-    
+
     public function refuserFiche() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /index.php');
-            exit;
+            redirect('index.php');
         }
-        
-        $idVisiteur = intval($_POST['id_visiteur']);
-        $mois = $_POST['mois'];
-        
-        $this->ficheFraisModel->refuserFiche($idVisiteur, $mois);
-        
-        header('Location: /index.php?success=1');
-        exit;
+
+        $idVisiteur = intval($_POST['id_visiteur'] ?? 0);
+        $mois       = $_POST['mois'] ?? '';
+
+        if ($idVisiteur && preg_match('/^\d{6}$/', $mois)) {
+            $this->ficheFraisModel->refuserFiche($idVisiteur, $mois);
+        }
+
+        redirect('index.php?success=1');
     }
-    
+
     public function validerFraisHorsForfait() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /index.php');
-            exit;
+            redirect('index.php');
         }
-        
-        $id = intval($_POST['id']);
-        $commentaire = $_POST['commentaire'] ?? null;
-        
-        $this->fraisHorsForfaitModel->valider($id, $commentaire);
-        
-        header('Location: /index.php?action=voir_fiche&visiteur=' . $_POST['id_visiteur'] . '&mois=' . $_POST['mois']);
-        exit;
+
+        $id          = intval($_POST['id'] ?? 0);
+        $commentaire = trim($_POST['commentaire'] ?? '');
+        $idVisiteur  = intval($_POST['id_visiteur'] ?? 0);
+        $mois        = $_POST['mois'] ?? '';
+
+        if ($id > 0) {
+            $this->fraisHorsForfaitModel->valider($id, $commentaire ?: null);
+        }
+
+        redirect('index.php?action=voir_fiche&visiteur=' . $idVisiteur . '&mois=' . $mois . '&success=1');
     }
-    
+
     public function refuserFraisHorsForfait() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: /index.php');
-            exit;
+            redirect('index.php');
         }
-        
-        $id = intval($_POST['id']);
-        $commentaire = $_POST['commentaire'] ?? '';
-        
+
+        $id          = intval($_POST['id'] ?? 0);
+        $commentaire = trim($_POST['commentaire'] ?? '');
+        $idVisiteur  = intval($_POST['id_visiteur'] ?? 0);
+        $mois        = $_POST['mois'] ?? '';
+
         if (empty($commentaire)) {
-            header('Location: /index.php?action=voir_fiche&visiteur=' . $_POST['id_visiteur'] . '&mois=' . $_POST['mois'] . '&error=commentaire_requis');
-            exit;
+            redirect('index.php?action=voir_fiche&visiteur=' . $idVisiteur . '&mois=' . $mois . '&error=commentaire_requis');
         }
-        
-        $this->fraisHorsForfaitModel->refuser($id, $commentaire);
-        
-        header('Location: /index.php?action=voir_fiche&visiteur=' . $_POST['id_visiteur'] . '&mois=' . $_POST['mois']);
-        exit;
+
+        if ($id > 0) {
+            $this->fraisHorsForfaitModel->refuser($id, $commentaire);
+        }
+
+        redirect('index.php?action=voir_fiche&visiteur=' . $idVisiteur . '&mois=' . $mois . '&success=1');
     }
 }
-
