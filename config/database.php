@@ -28,7 +28,7 @@ class Database {
             echo '<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
                   <title>Erreur de connexion</title></head><body>
                   <h2>Impossible de se connecter à  la base de données.</h2>
-                  <p>VÃ©rifiez les paramétres dans <code>config/database.php</code> et que le serveur MySQL est dÃ©marrÃ©.</p>
+                  <p>VÃ©rifiez les paramétres dans <code>config/database.php</code> et que le serveur MySQL est démarré.</p>
                   <p><em>DÃ©tail technique : ' . htmlspecialchars($e->getMessage()) . '</em></p>
                   </body></html>';
             exit;
