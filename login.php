@@ -2,8 +2,7 @@
 require_once 'config/config.php';
 
 if (isAuthenticated()) {
-    header('Location: /index.php');
-    exit;
+    redirect('index.php');
 }
 
 require_once 'controllers/AuthController.php';
