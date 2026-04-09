@@ -18,8 +18,8 @@ include __DIR__ . '/../includes/header.php';
                 <tr>
                     <th>Visiteur</th>
                     <th>Mois</th>
-                    <th>Date de clÃ´ture</th>
-                    <th>Montant validÃ©</th>
+                    <th>Date de cloture</th>
+                    <th>Montant validé</th>
                     <th>Actions</th>
                 </tr>
             </thead>
