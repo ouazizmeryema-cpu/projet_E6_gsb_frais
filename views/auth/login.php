@@ -27,7 +27,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="login-info">
             <p><strong>Comptes de test :</strong></p>
             <ul>
-                <li>Admin : admin / admin123</li>
+                <li>Adminé : admin / admin123</li>
                 <li>Visiteur : visiteur1 / visiteur123</li>
                 <li>Comptable : comptable1 / comptable123</li>
             </ul>
