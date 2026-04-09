@@ -52,7 +52,24 @@ class FicheFrais {
         ");
         return $stmt->fetchAll();
     }
+
+    public function getALLFichesValidees(){
+        $stmt = $this->db->query("
+            SELECT ff.*, ef.libelle as etat_libelle, U.nom, U.prenom
+            FROM fiches_frais ff
+            LEFT  JOIN etats_fiche ef ON ff.id_etat = ef.id
+            LEFT JOIN utilisateurs u ON ff.id_visiteur = u.id
+            WHERE ff.id_etat = 4
+            ORDER BY ff.mois DESC
+            
+            
+        ");
+        return $stmt->fetchall();
+    }
     
+
+    
+
     public function validerFiche($idVisiteur, $mois) {
         $stmt = $this->db->prepare("UPDATE fiches_frais SET id_etat = 4 WHERE id_visiteur = ? AND mois = ?");
         return $stmt->execute([$idVisiteur, $mois]);
@@ -60,6 +77,11 @@ class FicheFrais {
     
     public function refuserFiche($idVisiteur, $mois) {
         $stmt = $this->db->prepare("UPDATE fiches_frais SET id_etat = 5 WHERE id_visiteur = ? AND mois = ?");
+        return $stmt->execute([$idVisiteur, $mois]);
+    }
+
+    public function payerFiche($idVisiteur, $mois){
+        $stmt = $this->db->prepare("UPDATE fiches_frais SET id_etat = 6 WHERE id_visiteur = ? AND mois = ?");
         return $stmt->execute([$idVisiteur, $mois]);
     }
 }

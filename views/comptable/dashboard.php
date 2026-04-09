@@ -61,5 +61,52 @@ include __DIR__ . '/../includes/header.php';
     </form>
 </div>
 
+<div class="dashboard-section">
+    <h3>Fiches validées — en attente de paiement</h3>
+
+    <?php if (empty($fichesValidees)): ?>
+        <div class="alert alert-info">Aucune fiche validée en attente de paiement.</div>
+    <?php else: ?>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Visiteur</th>
+                    <th>Mois</th>
+                    <th>Montant validé</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($fichesValidees as $fiche): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($fiche['prenom'] . ' ' . $fiche['nom']); ?></td>
+                        <td><?php echo substr($fiche['mois'], 4, 2) . '/' . substr($fiche['mois'], 0, 4); ?></td>
+                        <td><?php echo number_format($fiche['montant_valide'], 2, ',', ' '); ?> €</td>
+                        <td>
+                            <form method="POST" action="<?php echo url('index.php'); ?>?action=payer_fiche"
+                                  onsubmit="return confirm('Marquer cette fiche comme payée ?');">
+                                <input type="hidden" name="id_visiteur" value="<?php echo $fiche['id_visiteur']; ?>">
+                                <input type="hidden" name="mois" value="<?php echo $fiche['mois']; ?>">
+                                <button type="submit" class="btn btn-success btn-sm">Marquer comme payée</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+
+            </tbody>
+
+        </table>
+    <?php endif; ?>
+</div>
+
+
+
+
+
+
+
+
+
+
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 

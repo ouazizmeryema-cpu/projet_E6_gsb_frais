@@ -21,6 +21,8 @@ class ComptableController {
     public function dashboard() {
         $fichesEnAttente = $this->ficheFraisModel->getAllFichesEnAttente();
         $visiteurs       = $this->userModel->getAllVisiteurs();
+         $fichesValidees  = $this->ficheFraisModel->getAllFichesValidees();
+
 
         require_once __DIR__ . '/../views/comptable/dashboard.php';
     }
@@ -119,4 +121,21 @@ class ComptableController {
 
         redirect('index.php?action=voir_fiche&visiteur=' . $idVisiteur . '&mois=' . $mois . '&success=1');
     }
+
+    public function payerFiche(){
+        if($_SERVER ['REQUEST_METHOD'] !== 'POST') {
+            redirect('index.php');
+
+        }
+        $idVisiteur = intval($_POST['id_visiteur'] ?? 0);
+        $mois       = $_POST['mois'] ?? '';
+
+        if ($idVisiteur && preg_match('/^\d{6}$/', $mois)) {
+        $this->ficheFraisModel->payerFiche($idVisiteur, $mois);
+        }
+
+        redirect('index.php?success=1');
+
+    }
+
 }

@@ -51,6 +51,11 @@ switch ($user['type']) {
             case 'refuser_frais_hors_forfait':
                 $controller->refuserFraisHorsForfait();
                 break;
+            
+            case 'payer_fiche':
+                $controller->payerFiche(); 
+                break;
+
             default:
                 $controller->dashboard();
         }
