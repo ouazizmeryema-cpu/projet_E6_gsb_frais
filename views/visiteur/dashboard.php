@@ -7,16 +7,16 @@ $moisFormate = date('m/Y');
 ?>
 
 <?php if (isset($_GET['success'])): ?>
-    <div class="alert alert-success">Opération effectuée avec succées !</div>
+    <div class="alert alert-success">Opération effectuée avec succès !</div>
 <?php endif; ?>
 
 <div class="dashboard-section">
     <h3>Fiche de frais du mois de <?php echo $moisFormate; ?></h3>
     
     <?php if ($fiche && $fiche['id_etat'] == 2): ?>
-        <div class="alert alert-info">Cette fiche est cloturée et en attente de validation.</div>
+        <div class="alert alert-info">Cette fiche est clôturée et en attente de validation.</div>
     <?php elseif ($fiche && $fiche['id_etat'] >= 3): ?>
-        <div class="alert alert-warning">Cette fiche ne peut plus etre modifiée (<?php echo htmlspecialchars($fiche['etat_libelle']); ?>).</div>
+        <div class="alert alert-warning">Cette fiche ne peut plus être modifiée (<?php echo htmlspecialchars($fiche['etat_libelle']); ?>).</div>
     <?php endif; ?>
     
     <!-- Frais forfaitaires -->
@@ -49,7 +49,7 @@ $moisFormate = date('m/Y');
                     ?>
                         <tr>
                             <td><?php echo htmlspecialchars($frais['libelle']); ?></td>
-                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> â¬</td>
+                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> €</td>
                             <td>
                                 <input type="number" 
                                        name="quantite_<?php echo $frais['id']; ?>" 
@@ -58,14 +58,14 @@ $moisFormate = date('m/Y');
                                        class="form-control"
                                        <?php echo ($fiche && $fiche['id_etat'] >= 2) ? 'disabled' : ''; ?>>
                             </td>
-                            <td><?php echo number_format($total, 2, ',', ' '); ?> â¬</td>
+                            <td><?php echo number_format($total, 2, ',', ' '); ?> €</td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="3">Total frais forfaitaires</th>
-                        <th><?php echo number_format($totalForfait, 2, ',', ' '); ?> â¬</th>
+                        <th><?php echo number_format($totalForfait, 2, ',', ' '); ?> €</th>
                     </tr>
                 </tfoot>
             </table>
@@ -102,7 +102,7 @@ $moisFormate = date('m/Y');
                         <tr>
                             <td><?php echo date('d/m/Y', strtotime($frais['date_frais'])); ?></td>
                             <td><?php echo htmlspecialchars($frais['libelle']); ?></td>
-                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> â¬</td>
+                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> €</td>
                             <td>
                                 <?php if ($frais['justificatif']): ?>
                                     <a href="<?php echo url('uploads/'); ?><?php echo htmlspecialchars($frais['justificatif']); ?>" target="_blank" class="btn btn-sm">Voir</a>
@@ -112,7 +112,7 @@ $moisFormate = date('m/Y');
                             </td>
                             <td>
                                 <?php if (!$fiche || $fiche['id_etat'] < 2): ?>
-                                    <form method="POST" action="<?php echo url('index.php'); ?>?action=delete_frais_hors_forfait" style="display: inline;" onsubmit="return confirm('Ãtes-vous sÃ»r de vouloir supprimer ce frais ?');">
+                                    <form method="POST" action="<?php echo url('index.php'); ?>?action=delete_frais_hors_forfait" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce frais ?');">
                                         <input type="hidden" name="id" value="<?php echo $frais['id']; ?>">
                                         <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                     </form>
@@ -125,7 +125,7 @@ $moisFormate = date('m/Y');
             <tfoot>
                 <tr>
                     <th colspan="2">Total frais hors forfait</th>
-                    <th><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> â¬</th>
+                    <th><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> €</th>
                     <th colspan="2"></th>
                 </tr>
             </tfoot>
@@ -138,26 +138,26 @@ $moisFormate = date('m/Y');
     
     <!-- Total -->
     <div class="card">
-        <h4>RÃ©capitulatif</h4>
+        <h4>Récapitulatif</h4>
         <table class="table">
             <tr>
                 <th>Total frais forfaitaires</th>
-                <td><?php echo number_format($totalForfait, 2, ',', ' '); ?> â¬</td>
+                <td><?php echo number_format($totalForfait, 2, ',', ' '); ?> €</td>
             </tr>
             <tr>
                 <th>Total frais hors forfait</th>
-                <td><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> â¬</td>
+                <td><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> €</td>
             </tr>
             <tr>
-                <th><strong>Total gÃ©nÃ©ral</strong></th>
-                <td><strong><?php echo number_format($totalForfait + $totalHorsForfait, 2, ',', ' '); ?> â¬</strong></td>
+                <th><strong>Total général</strong></th>
+                <td><strong><?php echo number_format($totalForfait + $totalHorsForfait, 2, ',', ' '); ?> €</strong></td>
             </tr>
         </table>
         
         <?php if (!$fiche || $fiche['id_etat'] < 2): ?>
-            <form method="POST" action="<?php echo url('index.php'); ?>?action=cloturer_mois" onsubmit="return confirm('Ãtes-vous sÃ»r de vouloir clÃ´turer ce mois ? Vous ne pourrez plus modifier les frais.');">
+            <form method="POST" action="<?php echo url('index.php'); ?>?action=cloturer_mois" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer ce mois ? Vous ne pourrez plus modifier les frais.');">
                 <input type="hidden" name="mois" value="<?php echo $moisActuel; ?>">
-                <button type="submit" class="btn btn-warning">ClÃ´turer le mois</button>
+                <button type="submit" class="btn btn-warning">Clôturer le mois</button>
             </form>
         <?php endif; ?>
     </div>
@@ -169,9 +169,9 @@ $moisFormate = date('m/Y');
             <thead>
                 <tr>
                     <th>Mois</th>
-                    <th>état</th>
+                    <th>État</th>
                     <th>Montant validé</th>
-                    <th>Date de cloture</th>
+                    <th>Date de clôture</th>
                 </tr>
             </thead>
             <tbody>
@@ -184,7 +184,7 @@ $moisFormate = date('m/Y');
                         <tr>
                             <td><?php echo substr($h['mois'], 4, 2) . '/' . substr($h['mois'], 0, 4); ?></td>
                             <td><?php echo htmlspecialchars($h['etat_libelle']); ?></td>
-                            <td><?php echo number_format($h['montant_valide'], 2, ',', ' '); ?> à¬</td>
+                            <td><?php echo number_format($h['montant_valide'], 2, ',', ' '); ?> €</td>
                             <td><?php echo $h['date_cloture'] ? date('d/m/Y H:i', strtotime($h['date_cloture'])) : '-'; ?></td>
                         </tr>
                     <?php endforeach; ?>
@@ -229,4 +229,3 @@ $moisFormate = date('m/Y');
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
-
