@@ -32,5 +32,26 @@ class FraisForfait {
         ");
         return $stmt->execute([$idVisiteur, $idFraisForfait, $mois, $quantite, $quantite]);
     }
+
+    public function getById($id) {
+        $stmt = $this->db->prepare("SELECT * FROM frais_forfait WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    public function create($libelle, $montant) {
+        $stmt = $this->db->prepare("INSERT INTO frais_forfait (libelle, montant) VALUES (?, ?)");
+        return $stmt->execute([$libelle, $montant]);
+    }
+
+    public function update($id, $libelle, $montant) {
+        $stmt = $this->db->prepare("UPDATE frais_forfait SET libelle = ?, montant = ? WHERE id = ?");
+        return $stmt->execute([$libelle, $montant, $id]);
+    }
+
+    public function delete($id) {
+        $stmt = $this->db->prepare("DELETE FROM frais_forfait WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
 }
 
