@@ -104,7 +104,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
                             <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> €</td>
                             <td>
                                 <?php if ($frais['justificatif']): ?>
-                                    <a href="/uploads/<?php echo htmlspecialchars($frais['justificatif']); ?>" target="_blank" class="btn btn-sm">Voir</a>
+                                    <a href="<?php echo url('uploads/'); ?><?php echo htmlspecialchars($frais['justificatif']); ?>" target="_blank" class="btn btn-sm">Voir</a>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>
@@ -113,7 +113,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
                             <td><?php echo $frais['commentaire_comptable'] ? htmlspecialchars($frais['commentaire_comptable']) : '-'; ?></td>
                             <td>
                                 <?php if ($frais['valide'] === null): ?>
-                                    <form method="POST" action="/index.php?action=valider_frais_hors_forfait" style="display: inline;">
+                                    <form method="POST" action="<?php echo url('index.php'); ?>?action=valider_frais_hors_forfait" style="display: inline;">
                                         <input type="hidden" name="id" value="<?php echo $frais['id']; ?>">
                                         <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
                                         <input type="hidden" name="mois" value="<?php echo $mois; ?>">
@@ -156,12 +156,12 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
         
         <?php if ($fiche && $fiche['id_etat'] == 2): ?>
             <div class="actions">
-                <form method="POST" action="/index.php?action=valider_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette fiche ?');">
+                <form method="POST" action="<?php echo url('index.php'); ?>?action=valider_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette fiche ?');">
                     <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
                     <input type="hidden" name="mois" value="<?php echo $mois; ?>">
                     <button type="submit" class="btn btn-success">Valider la fiche</button>
                 </form>
-                <form method="POST" action="/index.php?action=refuser_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir refuser cette fiche ?');">
+                <form method="POST" action="<?php echo url('index.php'); ?>?action=refuser_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir refuser cette fiche ?');">
                     <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
                     <input type="hidden" name="mois" value="<?php echo $mois; ?>">
                     <button type="submit" class="btn btn-danger">Refuser la fiche</button>
@@ -176,7 +176,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
     <div class="modal-content">
         <span class="close" onclick="document.getElementById('modal-refus').style.display='none'">&times;</span>
         <h3>Refuser un frais hors forfait</h3>
-        <form method="POST" action="/index.php?action=refuser_frais_hors_forfait">
+        <form method="POST" action="<?php echo url('index.php'); ?>?action=refuser_frais_hors_forfait">
             <input type="hidden" name="id" id="refus_id">
             <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
             <input type="hidden" name="mois" value="<?php echo $mois; ?>">
