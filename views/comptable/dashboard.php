@@ -4,7 +4,7 @@ include __DIR__ . '/../includes/header.php';
 ?>
 
 <?php if (isset($_GET['success'])): ?>
-    <div class="alert alert-success">Opération effectuée avec succès !</div>
+    <div class="alert alert-success">Opération effectuée avec succés !</div>
 <?php endif; ?>
 
 <div class="dashboard-section">
@@ -18,8 +18,8 @@ include __DIR__ . '/../includes/header.php';
                 <tr>
                     <th>Visiteur</th>
                     <th>Mois</th>
-                    <th>Date de clôture</th>
-                    <th>Montant validé</th>
+                    <th>Date de clÃ´ture</th>
+                    <th>Montant validÃ©</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -29,9 +29,9 @@ include __DIR__ . '/../includes/header.php';
                         <td><?php echo htmlspecialchars($fiche['prenom'] . ' ' . $fiche['nom']); ?></td>
                         <td><?php echo substr($fiche['mois'], 4, 2) . '/' . substr($fiche['mois'], 0, 4); ?></td>
                         <td><?php echo $fiche['date_cloture'] ? date('d/m/Y H:i', strtotime($fiche['date_cloture'])) : '-'; ?></td>
-                        <td><?php echo number_format($fiche['montant_valide'], 2, ',', ' '); ?> €</td>
+                        <td><?php echo number_format($fiche['montant_valide'], 2, ',', ' '); ?> </td>
                         <td>
-                            <a href="/index.php?action=voir_fiche&visiteur=<?php echo $fiche['id_visiteur']; ?>&mois=<?php echo $fiche['mois']; ?>" class="btn btn-primary btn-sm">Voir la fiche</a>
+                            <a href="<?php echo url('index.php'); ?>?action=voir_fiche&visiteur=<?php echo $fiche['id_visiteur']; ?>&mois=<?php echo $fiche['mois']; ?>" class="btn btn-primary btn-sm">Voir la fiche</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -42,7 +42,7 @@ include __DIR__ . '/../includes/header.php';
 
 <div class="dashboard-section">
     <h3>Rechercher une fiche par visiteur</h3>
-    <form method="GET" action="/index.php" class="form-inline">
+    <form method="GET" action="<?php echo url('index.php'); ?>" class="form-inline">
         <input type="hidden" name="action" value="voir_fiche">
         <div class="form-group">
             <label for="visiteur">Visiteur</label>
