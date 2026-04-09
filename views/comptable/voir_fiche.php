@@ -14,8 +14,8 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
     
     <?php if ($fiche): ?>
         <div class="card">
-            <p><strong>État :</strong> <?php echo htmlspecialchars($fiche['etat_libelle']); ?></p>
-            <p><strong>Montant validé :</strong> <?php echo number_format($fiche['montant_valide'], 2, ',', ' '); ?> €</p>
+            <p><strong>Ãtat :</strong> <?php echo htmlspecialchars($fiche['etat_libelle']); ?></p>
+            <p><strong>Montant validé :</strong> <?php echo number_format($fiche['montant_valide'], 2, ',', ' '); ?> â¬</p>
         </div>
     <?php else: ?>
         <div class="alert alert-warning">Cette fiche n'existe pas encore.</div>
@@ -47,9 +47,9 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
                     ?>
                         <tr>
                             <td><?php echo htmlspecialchars($ligne['libelle']); ?></td>
-                            <td><?php echo number_format($ligne['montant'], 2, ',', ' '); ?> €</td>
+                            <td><?php echo number_format($ligne['montant'], 2, ',', ' '); ?> â¬</td>
                             <td><?php echo $ligne['quantite']; ?></td>
-                            <td><?php echo number_format($total, 2, ',', ' '); ?> €</td>
+                            <td><?php echo number_format($total, 2, ',', ' '); ?> â¬</td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -57,7 +57,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
             <tfoot>
                 <tr>
                     <th colspan="3">Total frais forfaitaires</th>
-                    <th><?php echo number_format($totalForfait, 2, ',', ' '); ?> €</th>
+                    <th><?php echo number_format($totalForfait, 2, ',', ' '); ?> â¬</th>
                 </tr>
             </tfoot>
         </table>
@@ -73,7 +73,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
                     <th>Libellé</th>
                     <th>Montant</th>
                     <th>Justificatif</th>
-                    <th>État</th>
+                    <th>état</th>
                     <th>Commentaire</th>
                     <th>Actions</th>
                 </tr>
@@ -92,16 +92,16 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
                         $etatText = 'En attente';
                         if ($frais['valide'] === true) {
                             $etatClass = 'text-success';
-                            $etatText = 'Accepté';
+                            $etatText = 'AcceptÃ©';
                         } elseif ($frais['valide'] === false) {
                             $etatClass = 'text-danger';
-                            $etatText = 'Refusé';
+                            $etatText = 'RefusÃ©';
                         }
                     ?>
                         <tr>
                             <td><?php echo date('d/m/Y', strtotime($frais['date_frais'])); ?></td>
                             <td><?php echo htmlspecialchars($frais['libelle']); ?></td>
-                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> €</td>
+                            <td><?php echo number_format($frais['montant'], 2, ',', ' '); ?> â¬</td>
                             <td>
                                 <?php if ($frais['justificatif']): ?>
                                     <a href="<?php echo url('uploads/'); ?><?php echo htmlspecialchars($frais['justificatif']); ?>" target="_blank" class="btn btn-sm">Voir</a>
@@ -129,7 +129,7 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
             <tfoot>
                 <tr>
                     <th colspan="2">Total frais hors forfait</th>
-                    <th><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> €</th>
+                    <th><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> â¬</th>
                     <th colspan="4"></th>
                 </tr>
             </tfoot>
@@ -138,30 +138,30 @@ $moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
     
     <!-- Total et actions -->
     <div class="card">
-        <h4>Récapitulatif</h4>
+        <h4>RÃ©capitulatif</h4>
         <table class="table">
             <tr>
                 <th>Total frais forfaitaires</th>
-                <td><?php echo number_format($totalForfait, 2, ',', ' '); ?> €</td>
+                <td><?php echo number_format($totalForfait, 2, ',', ' '); ?> â¬</td>
             </tr>
             <tr>
                 <th>Total frais hors forfait</th>
-                <td><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> €</td>
+                <td><?php echo number_format($totalHorsForfait, 2, ',', ' '); ?> â¬</td>
             </tr>
             <tr>
                 <th><strong>Total général</strong></th>
-                <td><strong><?php echo number_format($totalForfait + $totalHorsForfait, 2, ',', ' '); ?> €</strong></td>
+                <td><strong><?php echo number_format($totalForfait + $totalHorsForfait, 2, ',', ' '); ?> â¬</strong></td>
             </tr>
         </table>
         
         <?php if ($fiche && $fiche['id_etat'] == 2): ?>
             <div class="actions">
-                <form method="POST" action="<?php echo url('index.php'); ?>?action=valider_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette fiche ?');">
+                <form method="POST" action="<?php echo url('index.php'); ?>?action=valider_fiche" style="display: inline;" onsubmit="return confirm('Ãtes-vous sÃ»r de vouloir valider cette fiche ?');">
                     <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
                     <input type="hidden" name="mois" value="<?php echo $mois; ?>">
                     <button type="submit" class="btn btn-success">Valider la fiche</button>
                 </form>
-                <form method="POST" action="<?php echo url('index.php'); ?>?action=refuser_fiche" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir refuser cette fiche ?');">
+                <form method="POST" action="<?php echo url('index.php'); ?>?action=refuser_fiche" style="display: inline;" onsubmit="return confirm('Ãtes-vous sÃ»r de vouloir refuser cette fiche ?');">
                     <input type="hidden" name="id_visiteur" value="<?php echo $visiteur['id']; ?>">
                     <input type="hidden" name="mois" value="<?php echo $mois; ?>">
                     <button type="submit" class="btn btn-danger">Refuser la fiche</button>
