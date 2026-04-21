@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../models/FicheFrais.php';
 require_once __DIR__ . '/../models/FraisForfait.php';
 require_once __DIR__ . '/../models/FraisHorsForfait.php';
@@ -19,7 +19,6 @@ class VisiteurController {
         $idVisiteur = $_SESSION['user_id'];
         $moisActuel = date('Ym');
 
-        // Créer la fiche du mois si elle n'existe pas
         $this->ficheFraisModel->createFiche($idVisiteur, $moisActuel);
 
         $fiche            = $this->ficheFraisModel->getFicheByMois($idVisiteur, $moisActuel);
@@ -54,7 +53,7 @@ class VisiteurController {
         }
 
         $idVisiteur = $_SESSION['user_id'];
-        $mois       = $_POST['mois']      ?? date('Ym');
+        $mois       = $_POST['mois']       ?? date('Ym');
         $dateFrais  = $_POST['date_frais'] ?? '';
         $libelle    = trim($_POST['libelle'] ?? '');
         $montant    = floatval($_POST['montant'] ?? 0);
@@ -111,5 +110,32 @@ class VisiteurController {
         $this->ficheFraisModel->cloturerFiche($idVisiteur, $mois);
 
         redirect('index.php?success=1');
+    }
+
+    public function graphique() {
+        $idVisiteur = $_SESSION['user_id'];
+        $données    = $this->ficheFraisModel->getFraisParMois($idVisiteur);
+
+        $mois   = [];
+        $totaux = [];
+
+        $moisFr = [
+            '01' => 'Janvier', '02' => 'Février',  '03' => 'Mars',
+            '04' => 'Avril',   '05' => 'Mai',       '06' => 'Juin',
+            '07' => 'Juillet', '08' => 'Août',      '09' => 'Septembre',
+            '10' => 'Octobre', '11' => 'Novembre',  '12' => 'Décembre'
+        ];
+
+        foreach ($données as $ligne) {
+            $annee    = substr($ligne['mois'], 0, 4);
+            $num      = substr($ligne['mois'], 4, 2);
+            $mois[]   = ($moisFr[$num] ?? $num) . ' ' . $annee;
+            $totaux[] = (float) $ligne['montant_valide'];
+        }
+
+        $moisJson   = json_encode($mois);
+        $totauxJson = json_encode($totaux);
+
+        require_once __DIR__ . '/../views/visiteur/graphique.php';
     }
 }

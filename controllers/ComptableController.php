@@ -55,19 +55,40 @@ class ComptableController {
     }
 
     public function validerFiche() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            redirect('index.php');
-        }
-
-        $idVisiteur = intval($_POST['id_visiteur'] ?? 0);
-        $mois       = $_POST['mois'] ?? '';
-
-        if ($idVisiteur && preg_match('/^\d{6}$/', $mois)) {
-            $this->ficheFraisModel->validerFiche($idVisiteur, $mois);
-        }
-
-        redirect('index.php?success=1');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        redirect('index.php');
     }
+
+    $idVisiteur = intval($_POST['id_visiteur'] ?? 0);
+    $mois       = $_POST['mois'] ?? '';
+
+    if ($idVisiteur && preg_match('/^\d{6}$/', $mois)) {
+        
+        // Calcul total forfait
+        $lignesForfait = $this->fraisForfaitModel->getLignesByMois($idVisiteur, $mois);
+        $totalForfait  = 0;
+        foreach ($lignesForfait as $ligne) {
+            $totalForfait += $ligne['quantite'] * $ligne['montant'];
+        }
+
+        // Calcul total hors forfait (uniquement les validés)
+        $fraisHorsForfait = $this->fraisHorsForfaitModel->getByMois($idVisiteur, $mois);
+        $totalHorsForfait = 0;
+        foreach ($fraisHorsForfait as $frais) {
+            if ($frais['etat'] !== 'refusé') {
+                $totalHorsForfait += $frais['montant'];
+            }
+        }
+
+        $montantValide = $totalForfait + $totalHorsForfait;
+
+        $this->ficheFraisModel->validerFicheAvecMontant($idVisiteur, $mois, $montantValide);
+    }
+
+    redirect('index.php?success=1');
+}
+
+   
 
     public function refuserFiche() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -192,6 +192,13 @@ $moisFormate = date('m/Y');
             </tbody>
         </table>
     </div>
+
+    <!-- Bouton graphique -->
+    <div class="card" style="margin-top: 20px;">
+        <a href="<?php echo url('index.php'); ?>?action=graphique" class="btn btn-primary">
+            Voir l'évolution de mes frais
+        </a>
+    </div>
 </div>
 
 <!-- Modal pour ajouter un frais hors forfait -->
