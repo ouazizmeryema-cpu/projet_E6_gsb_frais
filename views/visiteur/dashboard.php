@@ -2,13 +2,41 @@
 $pageTitle = 'Tableau de bord - Visiteur';
 include __DIR__ . '/../includes/header.php';
 
-$moisActuel = date('Ym');
-$moisFormate = date('m/Y');
+$moisActuel  = date('Ym');
+$moisFormate = substr($mois, 4, 2) . '/' . substr($mois, 0, 4);
 ?>
 
 <?php if (isset($_GET['success'])): ?>
     <div class="alert alert-success">Opération effectuée avec succès !</div>
 <?php endif; ?>
+<?php if (isset($_GET['error'])): ?>
+    <div class="alert alert-danger">
+        <?php
+        $errors = [
+            'mois_invalide' => 'Le mois sélectionné est invalide.',
+            'mois_futur'    => 'Impossible de créer une fiche pour un mois futur.',
+        ];
+        echo htmlspecialchars($errors[$_GET['error']] ?? 'Une erreur est survenue.');
+        ?>
+    </div>
+<?php endif; ?>
+
+<!-- Formulaire de création / sélection de fiche -->
+<div class="card">
+    <h4>Créer ou consulter une fiche</h4>
+    <form method="POST" action="<?php echo url('index.php'); ?>?action=creer_fiche" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+        <div class="form-group" style="margin:0;">
+            <label for="mois_input">Mois</label>
+            <input type="month" id="mois_input" name="mois_raw"
+                   value="<?php echo substr($mois, 0, 4) . '-' . substr($mois, 4, 2); ?>"
+                   max="<?php echo date('Y-m'); ?>"
+                   required class="form-control"
+                   oninput="document.getElementById('mois_hidden').value = this.value.replace('-','')">
+            <input type="hidden" id="mois_hidden" name="mois" value="<?php echo htmlspecialchars($mois); ?>">
+        </div>
+        <button type="submit" class="btn btn-primary">Créer / Ouvrir</button>
+    </form>
+</div>
 
 <div class="dashboard-section">
     <h3>Fiche de frais du mois de <?php echo $moisFormate; ?></h3>
@@ -23,7 +51,7 @@ $moisFormate = date('m/Y');
     <div class="card">
         <h4>Frais forfaitaires</h4>
         <form method="POST" action="<?php echo url('index.php'); ?>?action=save_frais_forfait">
-            <input type="hidden" name="mois" value="<?php echo $moisActuel; ?>">
+            <input type="hidden" name="mois" value="<?php echo $mois; ?>">
             <table class="table">
                 <thead>
                     <tr>
@@ -156,7 +184,7 @@ $moisFormate = date('m/Y');
         
         <?php if (!$fiche || $fiche['id_etat'] < 2): ?>
             <form method="POST" action="<?php echo url('index.php'); ?>?action=cloturer_mois" onsubmit="return confirm('Êtes-vous sûr de vouloir clôturer ce mois ? Vous ne pourrez plus modifier les frais.');">
-                <input type="hidden" name="mois" value="<?php echo $moisActuel; ?>">
+                <input type="hidden" name="mois" value="<?php echo $mois; ?>">
                 <button type="submit" class="btn btn-warning">Clôturer le mois</button>
             </form>
         <?php endif; ?>
@@ -207,7 +235,7 @@ $moisFormate = date('m/Y');
         <span class="close" onclick="document.getElementById('modal-add-frais').style.display='none'">&times;</span>
         <h3>Ajouter un frais hors forfait</h3>
         <form method="POST" action="<?php echo url('index.php'); ?>?action=add_frais_hors_forfait" enctype="multipart/form-data">
-            <input type="hidden" name="mois" value="<?php echo $moisActuel; ?>">
+            <input type="hidden" name="mois" value="<?php echo $mois; ?>">
             
             <div class="form-group">
                 <label for="date_frais">Date</label>

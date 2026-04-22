@@ -26,6 +26,9 @@ switch ($user['type']) {
             case 'cloturer_mois':
                 $controller->cloturerMois();
                 break;
+            case 'creer_fiche':
+                $controller->creerFiche();
+                break;
             case 'graphique':
                 $controller->graphique();
                 break;

@@ -18,14 +18,21 @@ class VisiteurController {
     public function dashboard() {
         $idVisiteur = $_SESSION['user_id'];
         $moisActuel = date('Ym');
+        $moisSelectionne = $_GET['mois'] ?? $moisActuel;
+
+        // Valider le format et ne pas autoriser le futur
+        if (!preg_match('/^\d{6}$/', $moisSelectionne) || $moisSelectionne > $moisActuel) {
+            $moisSelectionne = $moisActuel;
+        }
 
         $this->ficheFraisModel->createFiche($idVisiteur, $moisActuel);
 
-        $fiche            = $this->ficheFraisModel->getFicheByMois($idVisiteur, $moisActuel);
+        $fiche            = $this->ficheFraisModel->getFicheByMois($idVisiteur, $moisSelectionne);
         $fraisForfaits    = $this->fraisForfaitModel->getAll();
-        $lignesForfait    = $this->fraisForfaitModel->getLignesByMois($idVisiteur, $moisActuel);
-        $fraisHorsForfait = $this->fraisHorsForfaitModel->getByMois($idVisiteur, $moisActuel);
+        $lignesForfait    = $this->fraisForfaitModel->getLignesByMois($idVisiteur, $moisSelectionne);
+        $fraisHorsForfait = $this->fraisHorsForfaitModel->getByMois($idVisiteur, $moisSelectionne);
         $historique       = $this->ficheFraisModel->getFichesByVisiteur($idVisiteur);
+        $mois             = $moisSelectionne;
 
         require_once __DIR__ . '/../views/visiteur/dashboard.php';
     }
@@ -97,6 +104,29 @@ class VisiteurController {
         }
 
         redirect('index.php?success=1');
+    }
+
+    public function creerFiche() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('index.php');
+        }
+
+        $idVisiteur = $_SESSION['user_id'];
+        $mois       = $_POST['mois'] ?? '';
+
+        // Valider le format AAAAMM
+        if (!preg_match('/^\d{6}$/', $mois)) {
+            redirect('index.php?error=mois_invalide');
+        }
+
+        // Ne pas permettre de créer une fiche dans le futur
+        if ($mois > date('Ym')) {
+            redirect('index.php?error=mois_futur');
+        }
+
+        $this->ficheFraisModel->createFiche($idVisiteur, $mois);
+
+        redirect('index.php?mois=' . $mois . '&success=1');
     }
 
     public function cloturerMois() {
